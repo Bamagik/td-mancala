@@ -3,6 +3,7 @@
 # Mancala actions and play for the game
 
 from itertools import cycle
+import numpy as np
 
 PIT_COUNT = 12
 
@@ -10,16 +11,17 @@ def player_pits(player):
     return range( 0+(6*(player-1)), 6+(6*(player-1)) )
 
 class Board():
-    banks = [0] * 2
-    pits = [4] * PIT_COUNT
+    def __init__(self):
+        self.banks = [0] * 2
+        self.pits = [4] * PIT_COUNT
 
     def check_capture(self, last_pit: int, player: int):
         return self.pits[last_pit] == 1 and last_pit in player_pits(player)
 
     def is_end(self):
         if sum(self.pits[0:6]) == 0 or sum(self.pits[6:12]) == 0:
-            banks[0] += sum(self.pits[0:6])
-            banks[1] += sum(self.pits[6:12])
+            self.banks[0] += sum(self.pits[0:6])
+            self.banks[1] += sum(self.pits[6:12])
             return True
         return False
 
@@ -89,3 +91,5 @@ if __name__ == "__main__":
                 print(f"Player {whos_turn} goes again")
                 continue
             whos_turn = next(player_turns)
+
+    print("Player", np.argmax(board.banks)+1, "won!")
