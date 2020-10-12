@@ -24,9 +24,13 @@ class Board():
         return False
 
     def print_board(self):
+        print(" ", " ".join([f"{p}" for p in player_pits(2)[::-1]]), " ", sep="")
+        print("-"*20)
         print(" ", " ".join([f"{p}" for p in self.pits[11:5:-1]]), " ")
         print(self.banks[1], " "*11, self.banks[0])
         print(" ", " ".join([f"{p}" for p in self.pits[0:6]]), " ")
+        print("-"*20)
+        print(" ", " ".join([f"{p}" for p in player_pits(1)]), " ")
 
     def sow_seeds(self, pit_idx: int, player: int):
         seeds = self.pits[pit_idx]
