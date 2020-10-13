@@ -15,6 +15,19 @@ class Board():
         self.banks = [0] * 2
         self.pits = [4] * PIT_COUNT
 
+    def vectorize(self, player):
+        your_pits = np.array(self.pits)[player_pits(player)]
+        your_bank = self.banks[player-1]
+
+        pit_copy = self.pits.copy()
+
+        for idx in player_pits(player)[::-1]:
+            pit_copy.pop(idx)
+        opp_pits = np.array(pit_copy)
+        opp_bank = self.banks[2-player]
+
+        return np.array([*your_pits, your_bank, *opp_pits, opp_bank])
+
     def check_capture(self, last_pit: int, player: int):
         return self.pits[last_pit] == 1 and last_pit in player_pits(player)
 
@@ -84,12 +97,13 @@ if __name__ == "__main__":
         pit = int(input(f"Player {whos_turn} move:"))
         if pit not in player_pits(whos_turn):
             print("Pit is not the player's, choose again")
-            continue
+        elif board.pits[pit] == 0:
+            print("Pit is empty, choose another")
         else:
             play_again = board.sow_seeds(pit, whos_turn)
             if play_again:
                 print(f"Player {whos_turn} goes again")
-                continue
-            whos_turn = next(player_turns)
+            else:
+                whos_turn = next(player_turns)
 
     print("Player", np.argmax(board.banks)+1, "won!")
