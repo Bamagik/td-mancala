@@ -1,6 +1,6 @@
 import numpy as np
 import copy
-from . import mancala
+import mancala
 
 ALPHA = 0.1
 EPSILON = 0.1
@@ -16,25 +16,25 @@ class MancalaAI():
         best_action = None
         best_av = np.inf
         for i in range(6):
-            if board.pits[i + (player-1)*6] != 0:
+            if board.pits[i + (self.player-1)*6] != 0:
                 new_board = copy.deepcopy(board)
                 
-                new_board.sow_seeds(i + (player-1)*6)
+                new_board.sow_seeds(i + (self.player-1)*6, self.player)
 
-                av = np.dot(self.W, new_board.vectorize())
+                av = np.dot(self.W, new_board.vectorize(self.player))
 
                 if av < best_av:
-                    best_action = i + (player-1)*6
+                    best_action = i + (self.player-1)*6
                     best_av = av
             
         return best_action  
 
     def move(self, board):
-        if np.random.random >= self.epsilon:
-            action = self.choose_action()
+        if np.random.random() >= self.epsilon:
+            action = self.choose_action(board)
         else:
             action = np.random.randint(6)
-            while board.pits[action + (1-player)*6] == 0:
+            while board.pits[action + (1-self.player)*6] == 0:
                 action = np.random.randint(6)
         return action
 
@@ -66,9 +66,9 @@ def sarsa():
                 # take action, observe impact
                 play_again = board.sow_seeds(action, current_player)
                 if board.is_end() and np.argmax(board.banks)+1 == current_player:
-                    reward = 10
+                    reward = 1
                 elif board.is_end():
-                    reward = -10
+                    reward = -1
                 else:
                     reward = 0
                 
