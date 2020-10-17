@@ -72,6 +72,7 @@ class Board():
 
         # on capture at end of sowing
         if self.check_capture(previous_pit, player):
+            # print(f"Captured Pieces at {previous_pit} and {PIT_COUNT - 1 - previous_pit}")
             self.banks[player-1] += self.pits[previous_pit]
             self.pits[previous_pit] = 0
 
