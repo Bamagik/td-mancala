@@ -8,7 +8,7 @@ EPSILON = 0.1
 GAMMA = 0.5
 LAMBDA = 0.1
 
-NUM_WEIGHTS = 19
+NUM_WEIGHTS = 98
 
 class MancalaAI():
     def __init__(self, player, W=np.random.random((14)), epsilon=EPSILON):

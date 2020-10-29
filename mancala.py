@@ -4,6 +4,7 @@
 
 from itertools import cycle
 import numpy as np
+from sklearn.preprocessing import PolynomialFeatures
 
 PIT_COUNT = 12
 
@@ -36,7 +37,11 @@ class Board():
 
         weighted_heuristic = your_bank + pebble_total_diff * 0.3
 
-        return np.array([*your_pits, your_bank, *opp_pits, opp_bank, bank_diff, opp_pebble_total, your_pebble_total, pebble_total_diff, weighted_heuristic])
+        pf = PolynomialFeatures(degree=2)
+
+        pit_mtx = pf.fit_transform(np.array([[*your_pits, *opp_pits]]))
+
+        return np.array([*pit_mtx[0], your_bank, opp_bank, bank_diff, opp_pebble_total, your_pebble_total, pebble_total_diff, weighted_heuristic])
 
     def check_capture(self, last_pit: int, player: int):
         return self.pits[last_pit] == 1 and last_pit in player_pits(player) and self.pits[11 - last_pit] != 0

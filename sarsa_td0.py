@@ -6,6 +6,8 @@ ALPHA = 10e-4
 EPSILON = 0.1
 GAMMA = 0.1
 
+NUM_WEIGHTS = 98
+
 class MancalaAI():
     def __init__(self, player, W=np.random.random((14)), epsilon=EPSILON):
         self.player = player
@@ -58,7 +60,7 @@ def sarsa():
     v^ here is defined as X*W
     """
     policy = None
-    w = np.random.random((19,))
+    w = np.random.random((NUM_WEIGHTS,))
     
     for i in range(10000):
         board = mancala.Board()
