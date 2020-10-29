@@ -58,7 +58,7 @@ def sarsa():
     v^ here is defined as X*W
     """
     policy = None
-    w = np.random.random((14,))
+    w = np.random.random((19,))
     
     for i in range(10000):
         board = mancala.Board()

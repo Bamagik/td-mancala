@@ -26,10 +26,20 @@ class Board():
         opp_pits = np.array(pit_copy)
         opp_bank = self.banks[2-player]
 
-        return np.array([*your_pits, your_bank, *opp_pits, opp_bank])
+        # New features
+        bank_diff = self.banks[player] - self.banks[2-player]
+
+        opp_pebble_total = opp_pits.sum()
+        your_pebble_total = your_pits.sum()
+
+        pebble_total_diff = your_pebble_total - opp_pebble_total
+
+        weighted_heuristic = your_bank + pebble_total_diff * 0.3
+
+        return np.array([*your_pits, your_bank, *opp_pits, opp_bank, bank_diff, opp_pebble_total, your_pebble_total, pebble_total_diff, weighted_heuristic])
 
     def check_capture(self, last_pit: int, player: int):
-        return self.pits[last_pit] == 1 and last_pit in player_pits(player)
+        return self.pits[last_pit] == 1 and last_pit in player_pits(player) and self.pits[11 - last_pit] != 0
 
     def is_end(self):
         if sum(self.pits[0:6]) == 0 or sum(self.pits[6:12]) == 0:
