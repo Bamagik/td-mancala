@@ -1,11 +1,12 @@
 import numpy as np
 import copy
 import mancala
+import time
 
-ALPHA = 10e-4 
+ALPHA = 10e-6
 EPSILON = 0.1
-GAMMA = 0.1
-LAMBDA = 0.2
+GAMMA = 0.5
+LAMBDA = 0.1
 
 NUM_WEIGHTS = 19
 
@@ -88,27 +89,33 @@ def sarsa():
 
         turn = 0
 
+        last_banks = None
+
         while not board.is_end():
             play_again = False
             if ai_player == current_player:
                 reward = 0
                 new_state = board.vectorize(current_player)
 
-                # previous_bank_val = board.banks[current_player-1]
-                action, av = players[current_player].move(board)
+                if action is None:
+                    # previous_bank_val = board.banks[current_player-1]
+                    action, av = players[current_player].move(board)
 
-                Q = w.T @ state
-                Q_prime = w.T @ new_state
+                    Q = w.T @ state
+                    Q_prime = w.T @ new_state
 
-                delta = reward + GAMMA * Q_prime - Q
-                z = GAMMA * LAMBDA * z + (1 - ALPHA * GAMMA * LAMBDA * z.T @ state) * state
+                    delta = reward + GAMMA * Q_prime - Q
+                    z = GAMMA * LAMBDA * z + (1 - ALPHA * GAMMA * LAMBDA * z.T @ state) * state
 
-                w = w + ALPHA * (delta + Q - Qold) * z - \
-                    ALPHA * (Q - Qold) * state
-                
-                players[current_player].W = w
+                    w = w + ALPHA * (delta + Q - Qold) * z - \
+                        ALPHA * (Q - Qold) * state
+                    
+                    players[current_player].W = w
 
-                Qold = Q 
+                    Qold = Q 
+                else:
+                    action, av = players[current_player].move(board)
+                    
                 state = new_state
                 play_again = board.sow_seeds(action, current_player)
             else:
@@ -131,7 +138,11 @@ def sarsa():
 
 
 if __name__ == "__main__":
+    start = time.time()
+
     weights = sarsa()
+
+    print('Took', time.time() - start, 'seconds')
 
     print(weights)
 

@@ -27,7 +27,7 @@ class Board():
         opp_bank = self.banks[2-player]
 
         # New features
-        bank_diff = self.banks[player] - self.banks[2-player]
+        bank_diff = self.banks[player-1] - self.banks[2-player]
 
         opp_pebble_total = opp_pits.sum()
         your_pebble_total = your_pits.sum()
